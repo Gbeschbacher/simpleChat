@@ -1,0 +1,19 @@
+{
+  "name": "simpleChat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PosMich/simpleChat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PosMich/simpleChat/issues"
+  },
+  "homepage": "https://github.com/PosMich/simpleChat"
+}
