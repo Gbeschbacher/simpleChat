@@ -1,4 +1,5 @@
 (function() {
+    "use strict";
 
     var http    = require( "http" );
 
@@ -11,25 +12,20 @@
 
     var app = express();
 
-    var accessLogStream = fs.createWriteStream(
-        config.accessLog,
-        { flags: "a" }
-    );
-
-    app.use( morgan( "combined", { stream: accessLogStream }) );
-
+    app.use( morgan() );
     app.use( bodyParser.urlencoded({extended: true}) );
     app.use( bodyParser.json() );
+    app.use( express.static("./build") );
 
     app.use( api );
 
     module.exports = function () {
-        server = http.createServer( app );
+        var server = http.createServer( app );
 
         server.listen( config.port, function() {
-            var address = server.address()
+            var address = server.address();
             console.log( "Listening on " + address.address + ":" + address.port );
         });
-    }
+    };
 
 })();

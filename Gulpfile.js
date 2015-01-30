@@ -2,16 +2,12 @@
     "use strict";
 
     var gulp = require( "gulp-help" )(require("gulp"));
-    var jade = require( "gulp-jade" );
-    var concat = require( "gulp-concat" );
-    var uglify = require( "gulp-uglify" );
-    var gif = require( "gulp-if" );
-    var karma = require( "gulp-karma" );
+
     var shell = require( "gulp-shell" );
-    var debug = require( "gulp-debug" );
-    var copy = require( "gulp-copy" );
     var jshint = require( "gulp-jshint" );
     var nodemon = require( "gulp-nodemon" );
+    var traceur = require( "gulp-traceur" );
+    var uglify  = require( "gulp-uglify" );
 
     /*
 
@@ -47,17 +43,17 @@
         console.log(line);
     }
 
-    var BUILD_FILES = [];
 
     gulp.task("lint", "Lints all CoffeeScript source files.", function() {
-        gulp.src(["./**/*.js", "!./node_modules/**"]).pipe(jshint()).pipe(jshint.reporter());
+        gulp.src(["./**/*.js", "!./node_modules/**", "!./build/**"]).pipe(jshint()).pipe(jshint.reporter());
     });
 
 
-    gulp.task("build", "Lints and builds the project to './build/'.", ["lint", "copy:img"], function() {
-    });
-
-    gulp.task("build:production", "Lints, builds and minifies the project to './build/'.", ["lint"], function() {
+    gulp.task("build", "Lints, builds and minifies the project to './build/'.", ["lint"], function() {
+        return gulp.src( "app/main.js" )
+            .pipe( traceur() )
+            .pipe( uglify() )
+            .pipe( gulp.dest("./build") );
     });
 
     gulp.task("default", "Runs 'develop' and 'test'.", ["develop"]);
@@ -97,7 +93,7 @@
     });
 
 
-
+    /*
     var continueOnError = function(stream) {
         return stream.on('error', function(err) {
             console.log(err);
@@ -112,5 +108,5 @@
                 return this.removeListener('error', item);
             }
         }, stream);
-    };
+    };*/
 })();
