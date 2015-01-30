@@ -1,17 +1,16 @@
-(function() {
-    "use strict";
+ "use strict";
 
-    import Router from './router';
+import Router from './router' ;
 
-    class Application {
-        constructor(){
-            new Router();
-            Backbone.history.start();
-        }
+class Application {
+    constructor(){
+        new Router();
+        Backbone.history.start();
     }
+}
 
-    /*
-    $(() => {
-        new Application();
-    });*/
-})();
+$(() => {
+    new Application();
+});
+
+export default Application;
