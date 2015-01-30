@@ -18,6 +18,7 @@
 
     app.use( express.static("./build") );
     app.use( express.static("./views") );
+    app.use( express.static("./bower_components") );
 
     app.use( api );
 
