@@ -45,7 +45,7 @@
 
 
     gulp.task("lint", "Lints all CoffeeScript source files.", function() {
-        gulp.src(["./**/*.js", "!./node_modules/**", "!./build/**"]).pipe(jshint()).pipe(jshint.reporter());
+        gulp.src(["./**/*.js", "!./node_modules/**", "!./build/**", "!./bower_components/**"]).pipe(jshint()).pipe(jshint.reporter());
     });
 
 
