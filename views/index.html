@@ -1,0 +1,30 @@
+<!Doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <title>simpleChat</title>
+    </head>
+
+    <body>
+        <!-- single Page App  -->
+        <div id="app"></div>
+
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/underscore/underscore.js"></script>
+        <script src="bower_components/backbone/backbone.js"></script>
+        <script src="bower_components/traceur/traceur.js"></script>
+        <script src="bower_components/es6-module-loader/dist/es6-module-loader.js"></script>
+
+        <script>System.import('app/main')</script>
+
+        <script type="text/template" name="home">
+            <h1>simpleChat</h1>
+        </script>
+
+        <script type="text/template" name="chatroom">
+            <h1>Chat Room</h1>
+        </script>
+
+    </body>
+</html>

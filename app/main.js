@@ -1,7 +1,17 @@
 (function() {
     "use strict";
-    function log() {
-        console.log("bla");
+
+    import Router from './router';
+
+    class Application {
+        constructor(){
+            new Router();
+            Backbone.history.start();
+        }
     }
-    log();
+
+    /*
+    $(() => {
+        new Application();
+    });*/
 })();
