@@ -51,13 +51,24 @@
         gulp.src(["./**/*.js", "!./node_modules/**", "!./build/**", "!./bower_components/**"]).pipe(jshint()).pipe(jshint.reporter());
     });
 
+    var BUILD_FILES = [
+        "./bower_components/jquery/dist/jquery.js",
+        "./bower_components/underscore/underscore.js",
+        "./bower_components/backbone/backbone.js",
+        "./bower_components/traceur/traceur.js",
+        "./bower_components/es6-module-loader/dist/es6-module-loader.js",
+        "./app/*.js"
+    ]
 
     gulp.task("build", "Lints, builds and minifies the project to './build/'.", ["lint"], function() {
-        return gulp.src( "app/*.js" )
-            .pipe( traceur() )
+        return gulp.src( BUILD_FILES )
+            .pipe( sourcemaps.init() )
             .pipe( uglify() )
+            .pipe( concat("app.js") )
+            .pipe( sourcemaps.write() )
             .pipe( gulp.dest("./build") );
     });
+    //.pipe( traceur() )
 
     gulp.task("default", "Runs 'develop' and 'test'.", ["develop"]);
 
