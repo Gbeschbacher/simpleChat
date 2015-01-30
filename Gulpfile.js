@@ -8,6 +8,7 @@
     var nodemon = require( "gulp-nodemon" );
     var traceur = require( "gulp-traceur" );
     var uglify  = require( "gulp-uglify" );
+    var sourcemaps = require( "gulp-sourcemaps" );
 
     /*
 
@@ -44,13 +45,15 @@
     }
 
 
+
+
     gulp.task("lint", "Lints all CoffeeScript source files.", function() {
         gulp.src(["./**/*.js", "!./node_modules/**", "!./build/**", "!./bower_components/**"]).pipe(jshint()).pipe(jshint.reporter());
     });
 
 
     gulp.task("build", "Lints, builds and minifies the project to './build/'.", ["lint"], function() {
-        return gulp.src( "app/main.js" )
+        return gulp.src( "app/*.js" )
             .pipe( traceur() )
             .pipe( uglify() )
             .pipe( gulp.dest("./build") );
