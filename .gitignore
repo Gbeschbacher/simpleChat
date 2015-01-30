@@ -29,12 +29,8 @@ tmp/
 out/
 build/
 
-userconfig.coffee
-userconfig*
-config.coffee
-
-modules/config.coffee
-
 public/css/app.css
 public/js/app.js
 .coverrun
+
+bower_components
