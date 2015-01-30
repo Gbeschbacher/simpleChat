@@ -9,6 +9,7 @@
     var traceur = require( "gulp-traceur" );
     var uglify  = require( "gulp-uglify" );
     var sourcemaps = require( "gulp-sourcemaps" );
+    var concat = require( "gulp-concat" );
 
     /*
 
@@ -55,14 +56,15 @@
         "./bower_components/jquery/dist/jquery.js",
         "./bower_components/underscore/underscore.js",
         "./bower_components/backbone/backbone.js",
-        "./bower_components/traceur/traceur.js",
         "./bower_components/es6-module-loader/dist/es6-module-loader.js",
         "./app/*.js"
-    ]
+    ];
+    //"./bower_components/traceur/traceur.js",
 
     gulp.task("build", "Lints, builds and minifies the project to './build/'.", ["lint"], function() {
         return gulp.src( BUILD_FILES )
             .pipe( sourcemaps.init() )
+            .pipe( traceur() )
             .pipe( uglify() )
             .pipe( concat("app.js") )
             .pipe( sourcemaps.write() )
