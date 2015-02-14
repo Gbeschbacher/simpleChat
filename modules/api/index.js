@@ -6,7 +6,7 @@
 
     router.all( "*", function(req, res) {
         console.log( "Route not found: ", req.url );
-        res.status(404).json({ error: "not found" });
+        res.render("index");
     });
 
     module.exports = router;
