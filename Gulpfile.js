@@ -9,12 +9,13 @@
     var traceur    = require( "gulp-traceur" );
     var uglify     = require( "gulp-uglify" );
     var concat     = require( "gulp-concat" );
-    var livereload = require( "gulp-livereload" ); /* install chrome plugin */
     var sass       = require( "gulp-sass" );
     var prefixer   = require( "gulp-autoprefixer" );
     var minifyCSS  = require( "gulp-minify-css" );
     var docco      = require( "gulp-docco" );
     var jasmine    = require( "gulp-jasmine" );
+    var express    = require( "gulp-express" );
+    var livereload = require( "gulp-livereload" );
 
 
     var browserify = require( "browserify" );
@@ -87,6 +88,7 @@
             .pipe( concat("app.js") )
             .pipe( gulp.dest("./build/") )
             .pipe( uglify() )
+            .pipe( livereload() )
     });
 
     /* 1st Step: transpile es6 with tracur into tmp dir */
@@ -114,7 +116,7 @@
                 cascade: false}) )
             .pipe( minifyCSS() )
             .pipe( gulp.dest("./build") )
-            .pipe( livereload() );
+            .pipe( livereload() )
     });
 
     gulp.task( "build", ["build:css", "build:js", "build:cleanTemp"]);
@@ -127,9 +129,20 @@
 
     gulp.task( "default", "Runs 'develop' and 'test'.", ["serve"] );
 
-    gulp.task("dev", "Runs 'build' and watches the source files, rebuilds the project on change.", ["build"], function() {
-        livereload.listen()
-        gulp.watch(["app/**/*.js", "app/**/*.scss"], ["build", "test"]);
+    gulp.task("dev", "Runs 'build' and watches the source files, rebuilds the project on change.", ["build", "nodemon"], function() {
+        //express.run()
+        livereload.listen();
+        gulp.watch(["./app/**/*.js"], ["build:js", "test"], function() {
+            console.log("js changed");
+        });
+        gulp.watch(["./app/css/**/*.scss"], ["build:css"], function() {
+            console.log("scss changed");
+        });
+        gulp.watch(["./views/**/*.jade"], function() {
+            console.log("view changed");
+            livereload.reload();
+            //express.notify(cb);
+        });
     });
 
     gulp.task("clean", "Clear './build/' folder.", function(cb) {
@@ -139,6 +152,7 @@
     gulp.task("clean:tmp", function( cb ) {
         rimraf( "./build/tmp" );
     });
+
 
     var nodemonStarted = false;
 
@@ -156,4 +170,5 @@
                 console.log( "app restarted" );
             });
     });
+
 })();
