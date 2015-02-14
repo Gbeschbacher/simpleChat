@@ -4,7 +4,7 @@ var TMP_PATH = "./tmp/";
 
 /* Add classes here */
 var toExport = {
-    Router: require( "./lib/router.js" ).default
+    Router: require( "../../build/tmp/router.js" ).default
 };
 
 

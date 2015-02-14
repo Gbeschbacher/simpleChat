@@ -80,44 +80,29 @@
             .pipe(jasmine());
     })
 
-    /* 1st Step: transpile es6 with tracur into tmp dir *
-    gulp.task( "build:traceur", function( cb ) {
-        return gulp.src( "./app/router.js" )
-            .pipe(traceur({modules:"commonjs"}))
-            .pipe(gulp.dest("./build/"));
-    });
 
-
-    /* 2nd Step: add es6 runtime with browserify *
-    gulp.task("build:browserify", "Lints, builds and minifies the project to './build/'.", ["lint", "build:traceur"], function() {
-        return browserify( "./app/main.js" )
-            .transform( es6ify )
-            .bundle()
-            .pipe( source("main-bundle.js") )
-            .pipe( gulp.dest("./build/") )
-    });
-
-    /* 3rd step: concat and uglify *
-    */
+    /* 3rd step: concat and uglify */
     gulp.task("build:js", ["browserify:main"], function() {
         return gulp.src( FILES )
             .pipe( concat("app.js") )
             .pipe( gulp.dest("./build/") )
-            //.pipe( uglify() )
+            .pipe( uglify() )
     });
 
-    gulp.task( "build:lib", function() {
-        return gulp.src( "./src/**/*.js" )
+    /* 1st Step: transpile es6 with tracur into tmp dir */
+    gulp.task( "build:tmp", function() {
+        return gulp.src( "./app/js/modules/**/*.js" )
             .pipe( traceur( {modules:"commonjs"} ) )
-            .pipe( gulp.dest("./lib") )
+            .pipe( gulp.dest("./build/tmp") );
     })
 
-    gulp.task( "browserify:main", ["build:lib"], function() {
-        return browserify( "./app/main.js" )
+    /* 2nd Step: add es6 runtime with browserify */
+    gulp.task( "browserify:main", ["build:tmp"], function() {
+        return browserify( "./app/js/main.js" )
             .transform( es6ify )
             .bundle()
             .pipe( source("main-bundle.js") )
-            .pipe( gulp.dest("./build/") )
+            .pipe( gulp.dest("./build/") );
     })
 
 
@@ -132,14 +117,12 @@
             .pipe( livereload() );
     });
 
-    gulp.task( "build", ["build:css", "build:js"]);
+    gulp.task( "build", ["build:css", "build:js", "build:cleanTemp"]);
 
-    gulp.task( "build:cleanTemp", ["build:js", "build:css"], function(cb) {
-        cb()/*
+    gulp.task( "build:cleanTemp", ["build:js"], function(cb) {
         rimraf( "./build/tmp", function() {
             rimraf( "./build/main-bundle.js", cb );
-        });*/
-
+        });
     })
 
     gulp.task( "default", "Runs 'develop' and 'test'.", ["serve"] );
