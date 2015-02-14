@@ -1,7 +1,7 @@
 "use strict";
 
 import { User, Chatroom } from './models';
-import { Users, Chatrooms } from './collection';
+import { Users, Chatrooms } from './collections';
 
 const {View} = Backbone;
 const ENTER_KEY = 13;

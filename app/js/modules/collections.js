@@ -1,5 +1,7 @@
 "use strict";
 
+import { User, Chatroom } from './models';
+
 const {Collection} = Backbone;
 
 class Users extends Collection {
