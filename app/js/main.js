@@ -1,6 +1,8 @@
- "use strict";
+"use strict";
 
-import Router from './router' ;
+import Classes from "./classes.js";
+
+var Router = Classes.Router;
 
 class Application {
     constructor(){
@@ -12,5 +14,3 @@ class Application {
 $(() => {
     new Application();
 });
-
-export default Application;

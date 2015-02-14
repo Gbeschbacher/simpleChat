@@ -1,3 +1,4 @@
+"use strict";
 //import { HomeView, ChatRoomView } from './views';
 
 class Router extends Backbone.Router {
