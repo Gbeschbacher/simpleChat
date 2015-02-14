@@ -80,30 +80,46 @@
             .pipe(jasmine());
     })
 
-    /* 1st Step: transpile es6 with tracur into tmp dir */
+    /* 1st Step: transpile es6 with tracur into tmp dir *
     gulp.task( "build:traceur", function( cb ) {
-        return gulp.src( "./app/js/classes/**/*.js" )
+        return gulp.src( "./app/router.js" )
             .pipe(traceur({modules:"commonjs"}))
-            .pipe(gulp.dest("./build/tmp"));
+            .pipe(gulp.dest("./build/"));
     });
 
 
-    /* 2nd Step: add es6 runtime with browserify */
+    /* 2nd Step: add es6 runtime with browserify *
     gulp.task("build:browserify", "Lints, builds and minifies the project to './build/'.", ["lint", "build:traceur"], function() {
-        return browserify( "./app/js/main.js" )
+        return browserify( "./app/main.js" )
             .transform( es6ify )
             .bundle()
             .pipe( source("main-bundle.js") )
             .pipe( gulp.dest("./build/") )
     });
 
-    /* 3rd step: concat and uglify */
-    gulp.task("build:js", ["build:browserify"], function() {
+    /* 3rd step: concat and uglify *
+    */
+    gulp.task("build:js", ["browserify:main"], function() {
         return gulp.src( FILES )
             .pipe( concat("app.js") )
             .pipe( gulp.dest("./build/") )
             //.pipe( uglify() )
     });
+
+    gulp.task( "build:lib", function() {
+        return gulp.src( "./src/**/*.js" )
+            .pipe( traceur( {modules:"commonjs"} ) )
+            .pipe( gulp.dest("./lib") )
+    })
+
+    gulp.task( "browserify:main", ["build:lib"], function() {
+        return browserify( "./app/main.js" )
+            .transform( es6ify )
+            .bundle()
+            .pipe( source("main-bundle.js") )
+            .pipe( gulp.dest("./build/") )
+    })
+
 
     gulp.task( "build:css", function() {
         return gulp.src( "./app/css/app.scss" )
@@ -116,7 +132,7 @@
             .pipe( livereload() );
     });
 
-    gulp.task( "build", ["build:js", "build:css", "build:cleanTemp"]);
+    gulp.task( "build", ["build:css", "build:js"]);
 
     gulp.task( "build:cleanTemp", ["build:js", "build:css"], function(cb) {
         cb()/*

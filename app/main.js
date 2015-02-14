@@ -1,6 +1,6 @@
 "use strict";
 
-import Classes from "./classes.js";
+import Classes from "../index.js";
 
 var Router = Classes.Router;
 

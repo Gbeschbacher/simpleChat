@@ -1,10 +1,10 @@
 require( "traceur/bin/traceur-runtime" );
 
-var TMP_PATH = "../../build/tmp/";
+var TMP_PATH = "./tmp/";
 
 /* Add classes here */
 var toExport = {
-    Router: require( TMP_PATH + "router.js" ).default
+    Router: require( "./lib/router.js" ).default
 };
 
 
