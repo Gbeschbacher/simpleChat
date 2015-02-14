@@ -82,10 +82,7 @@
 
     /* 1st Step: transpile es6 with tracur into tmp dir */
     gulp.task( "build:traceur", function( cb ) {
-        return gulp.src( [
-                "./app/js/**/*.js",
-                "!./app/js/main.js",
-                "!./app/js/index.js" ] )
+        return gulp.src( "./app/js/classes/**/*.js" )
             .pipe(traceur({modules:"commonjs"}))
             .pipe(gulp.dest("./build/tmp"));
     });
@@ -104,8 +101,8 @@
     gulp.task("build:js", ["build:browserify"], function() {
         return gulp.src( FILES )
             .pipe( concat("app.js") )
-            .pipe( uglify() )
             .pipe( gulp.dest("./build/") )
+            //.pipe( uglify() )
     });
 
     gulp.task( "build:css", function() {
@@ -122,9 +119,10 @@
     gulp.task( "build", ["build:js", "build:css", "build:cleanTemp"]);
 
     gulp.task( "build:cleanTemp", ["build:js", "build:css"], function(cb) {
+        cb()/*
         rimraf( "./build/tmp", function() {
             rimraf( "./build/main-bundle.js", cb );
-        });
+        });*/
 
     })
 
