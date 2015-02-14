@@ -1,26 +1,28 @@
 "use strict";
-//import { HomeView, ChatRoomView } from './views';
+
+import { HomeView as Home, ChatroomView as Chatroom } from './views';
 
 class Router extends Backbone.Router {
 
     constructor () {
         this.routes = {
             "": "home",
-            "chatroom": "chatroom"
+            "chatroom": "chatroom",
+            "*actions": "home"
         };
         super();
     }
 
     home () {
         console.log("Router#home");
-        //var view = new HomeView();
-        //$("#app").html(view.render().$el)
+        var view = new Home();
+        $("#app").html(view.render().$el)
     }
 
     chatroom () {
         console.log("Router#chatroom");
-        //var view = new ChatRoomView();
-        //$("#app").html(view.render().$el)
+        var view = new Chatroom();
+        $("#app").html(view.render().$el)
     }
 }
 
