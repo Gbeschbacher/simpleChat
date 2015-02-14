@@ -9,12 +9,13 @@
     var traceur    = require( "gulp-traceur" );
     var uglify     = require( "gulp-uglify" );
     var concat     = require( "gulp-concat" );
-    var livereload = require( "gulp-livereload" ); /* install chrome plugin */
     var sass       = require( "gulp-sass" );
     var prefixer   = require( "gulp-autoprefixer" );
     var minifyCSS  = require( "gulp-minify-css" );
     var docco      = require( "gulp-docco" );
     var jasmine    = require( "gulp-jasmine" );
+    var express    = require( "gulp-express" );
+    var livereload = require( "gulp-livereload" );
 
 
     var browserify = require( "browserify" );
@@ -80,44 +81,30 @@
             .pipe(jasmine());
     })
 
-    /* 1st Step: transpile es6 with tracur into tmp dir *
-    gulp.task( "build:traceur", function( cb ) {
-        return gulp.src( "./app/router.js" )
-            .pipe(traceur({modules:"commonjs"}))
-            .pipe(gulp.dest("./build/"));
-    });
 
-
-    /* 2nd Step: add es6 runtime with browserify *
-    gulp.task("build:browserify", "Lints, builds and minifies the project to './build/'.", ["lint", "build:traceur"], function() {
-        return browserify( "./app/main.js" )
-            .transform( es6ify )
-            .bundle()
-            .pipe( source("main-bundle.js") )
-            .pipe( gulp.dest("./build/") )
-    });
-
-    /* 3rd step: concat and uglify *
-    */
+    /* 3rd step: concat and uglify */
     gulp.task("build:js", ["browserify:main"], function() {
         return gulp.src( FILES )
             .pipe( concat("app.js") )
             .pipe( gulp.dest("./build/") )
-            //.pipe( uglify() )
+            .pipe( uglify() )
+            .pipe( livereload() )
     });
 
-    gulp.task( "build:lib", function() {
-        return gulp.src( "./src/**/*.js" )
+    /* 1st Step: transpile es6 with tracur into tmp dir */
+    gulp.task( "build:tmp", function() {
+        return gulp.src( "./app/js/modules/**/*.js" )
             .pipe( traceur( {modules:"commonjs"} ) )
-            .pipe( gulp.dest("./lib") )
+            .pipe( gulp.dest("./build/tmp") );
     })
 
-    gulp.task( "browserify:main", ["build:lib"], function() {
-        return browserify( "./app/main.js" )
+    /* 2nd Step: add es6 runtime with browserify */
+    gulp.task( "browserify:main", ["build:tmp"], function() {
+        return browserify( "./app/js/main.js" )
             .transform( es6ify )
             .bundle()
             .pipe( source("main-bundle.js") )
-            .pipe( gulp.dest("./build/") )
+            .pipe( gulp.dest("./build/") );
     })
 
 
@@ -129,24 +116,33 @@
                 cascade: false}) )
             .pipe( minifyCSS() )
             .pipe( gulp.dest("./build") )
-            .pipe( livereload() );
+            .pipe( livereload() )
     });
 
-    gulp.task( "build", ["build:css", "build:js"]);
+    gulp.task( "build", ["build:css", "build:js", "build:cleanTemp"]);
 
-    gulp.task( "build:cleanTemp", ["build:js", "build:css"], function(cb) {
-        cb()/*
+    gulp.task( "build:cleanTemp", ["build:js"], function(cb) {
         rimraf( "./build/tmp", function() {
             rimraf( "./build/main-bundle.js", cb );
-        });*/
-
+        });
     })
 
     gulp.task( "default", "Runs 'develop' and 'test'.", ["serve"] );
 
-    gulp.task("dev", "Runs 'build' and watches the source files, rebuilds the project on change.", ["build"], function() {
-        livereload.listen()
-        gulp.watch(["app/**/*.js", "app/**/*.scss"], ["build", "test"]);
+    gulp.task("dev", "Runs 'build' and watches the source files, rebuilds the project on change.", ["build", "nodemon"], function() {
+        //express.run()
+        livereload.listen();
+        gulp.watch(["./app/**/*.js"], ["build:js", "test"], function() {
+            console.log("js changed");
+        });
+        gulp.watch(["./app/css/**/*.scss"], ["build:css"], function() {
+            console.log("scss changed");
+        });
+        gulp.watch(["./views/**/*.jade"], function() {
+            console.log("view changed");
+            livereload.reload();
+            //express.notify(cb);
+        });
     });
 
     gulp.task("clean", "Clear './build/' folder.", function(cb) {
@@ -156,6 +152,7 @@
     gulp.task("clean:tmp", function( cb ) {
         rimraf( "./build/tmp" );
     });
+
 
     var nodemonStarted = false;
 
@@ -173,4 +170,5 @@
                 console.log( "app restarted" );
             });
     });
+
 })();
