@@ -17,6 +17,7 @@ class Router extends Backbone.Router {
         console.log("Router#home");
         var view = new Home();
         $("#app").html(view.render().$el)
+        this.testIs = true;
     }
 
     chatroom () {

@@ -18,7 +18,7 @@ class Socket{
 class HomeView extends View {
 
     initialize () {
-        this.template = $('script[name="home"]').html();
+        this.template = $('script[name="home"]');
         console.log("homeview init")
 
         this.events = {
@@ -32,11 +32,11 @@ class HomeView extends View {
 
         console.log(JSON.stringify(new User()));
         console.log(JSON.stringify(new User({name: "test"})));
-
     }
 
     render () {
-        this.$el.html(_.template(this.template));
+        console.log(this.model);
+        this.$el.html(_.template(this.template(this.model.attributes)));
         return this;
     }
 
