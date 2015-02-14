@@ -13,6 +13,8 @@
     var sass       = require( "gulp-sass" );
     var prefixer   = require( "gulp-autoprefixer" );
     var minifyCSS  = require( "gulp-minify-css" );
+    var docco      = require( "gulp-docco" );
+    var jasmine    = require( "gulp-jasmine" );
 
 
     var browserify = require( "browserify" );
@@ -59,13 +61,24 @@
         "./build/main-bundle.js"
     ];
 
+    gulp.task( "doc", function() {
+        return gulp.src( ["./modules/**/*.js", "./app/js"] )
+            .pipe( docco() )
+            .pipe( gulp.dest( "./docs") )
 
+    })
+    gulp.task( "docs", ["doc"] );
 
     gulp.task( "lint", "Lints all CoffeeScript source files.", function() {
         return gulp.src( ["./app/**/*.js", "!./modules/**/*.js"] )
             .pipe( jshint() )
             .pipe( jshint.reporter() );
     });
+
+    gulp.task( "test", function() {
+        return gulp.src( "spec/**/*.js" )
+            .pipe(jasmine());
+    })
 
     /* 1st Step: transpile es6 with tracur into tmp dir */
     gulp.task( "build:traceur", function( cb ) {
