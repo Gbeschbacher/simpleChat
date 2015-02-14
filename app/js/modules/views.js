@@ -1,5 +1,20 @@
+"use strict";
+
+import { User, Chatroom } from './models';
+import { Users, Chatrooms } from './collection';
+
+
 const {View, Model, Collection} = Backbone;
 const ENTER_KEY = 13;
+
+
+class Socket{
+    constructor(){
+        this.socket = io();
+        return this.socket;
+    }
+}
+
 
 class HomeView extends View {
 
@@ -90,66 +105,4 @@ class ChatroomView extends View {
     }
 }
 
-class Socket{
-    constructor(){
-        this.socket = io();
-        return this.socket;
-    }
-}
-
-class User extends Model{
-    constructor(args){
-        super(args)
-        Object.defineProperty(this, "name", {
-            get: function (){ return this.get("name")} ,
-            set: function (value) { this.set("name",value); }
-        });
-    }
-
-    defaults(){
-        return{
-            name: "unnamed"
-        };
-    }
-
-}
-
-class Users extends Collection {
-  constructor (args) {
-    this.model = User;
-    super(args)
-  }
-}
-
-class Chatroom extends Model{
-    constructor(args){
-        super(args)
-
-        Object.defineProperty(this, "name", {
-            get: function (){ return this.get("name")} ,
-            set: function (value) { this.set("name",value); }
-        });
-
-        Object.defineProperty(this, "users", {
-            get: function (){ return this.get("users")} ,
-            set: function (value) { this.set("users",value); }
-        });
-    }
-
-    defaults(){
-        return{
-            name: "unnamed"
-        };
-    }
-}
-
-class Chatrooms extends Collection {
-  constructor (args) {
-    this.model = Chatroom;
-    super(args)
-  }
-}
-
-
-
-export{HomeView, ChatroomView};
+export {HomeView, ChatroomView};
