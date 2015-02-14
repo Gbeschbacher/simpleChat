@@ -1,5 +1,7 @@
 "use strict";
 
+const {Collection} = Backbone;
+
 class Users extends Collection {
   constructor (args) {
     this.model = User;

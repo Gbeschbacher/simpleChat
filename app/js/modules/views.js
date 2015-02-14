@@ -3,8 +3,7 @@
 import { User, Chatroom } from './models';
 import { Users, Chatrooms } from './collection';
 
-
-const {View, Model, Collection} = Backbone;
+const {View} = Backbone;
 const ENTER_KEY = 13;
 
 

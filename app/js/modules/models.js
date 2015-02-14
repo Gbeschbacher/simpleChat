@@ -1,5 +1,7 @@
 "use strict";
 
+const {Model} = Backbone;
+
 class User extends Model{
     constructor(args){
         super(args)
