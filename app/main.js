@@ -7,7 +7,7 @@ var Router = Classes.Router;
 class Application {
     constructor(){
         new Router();
-        Backbone.history.start();
+        Backbone.history.start({pushState: true});
     }
 }
 
