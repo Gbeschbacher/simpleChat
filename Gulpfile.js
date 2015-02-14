@@ -14,7 +14,6 @@
     var minifyCSS  = require( "gulp-minify-css" );
     var docco      = require( "gulp-docco" );
     var jasmine    = require( "gulp-jasmine" );
-    var express    = require( "gulp-express" );
     var livereload = require( "gulp-livereload" );
 
 

@@ -1,6 +1,5 @@
-(function() {
-    "use strict";
-    module.exports = {
-        port: 3000
-    };
-})();
+"use strict";
+module.exports = {
+    port: 3000,
+    mongo: "localhost/simpleChat"
+};
