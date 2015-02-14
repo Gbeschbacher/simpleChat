@@ -28,6 +28,7 @@ builtAssets/
 tmp/
 out/
 build/
+docs/
 
 public/css/app.css
 public/js/app.js

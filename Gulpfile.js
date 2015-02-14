@@ -75,7 +75,7 @@
             .pipe( jshint.reporter() );
     });
 
-    gulp.task( "test", function() {
+    gulp.task( "test", ["build"], function() {
         return gulp.src( "spec/**/*.js" )
             .pipe(jasmine());
     })
@@ -132,7 +132,7 @@
 
     gulp.task("dev", "Runs 'build' and watches the source files, rebuilds the project on change.", ["build"], function() {
         livereload.listen()
-        gulp.watch(["app/**/*.js", "app/**/*.scss"], ["build"]);
+        gulp.watch(["app/**/*.js", "app/**/*.scss"], ["build", "test"]);
     });
 
     gulp.task("clean", "Clear './build/' folder.", function(cb) {
