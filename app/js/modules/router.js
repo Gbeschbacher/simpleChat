@@ -1,6 +1,6 @@
 "use strict";
 
-import { HomeView as Home, ChatroomView as Chatroom } from './views';
+import { RoomsView as Rooms, ChatroomView as Chatroom, LoginView as Login } from './views';
 import { Users, Chatrooms } from './collections';
 
 // class Socket{
@@ -28,8 +28,13 @@ class Router extends Backbone.Router {
     }
 
     home () {
+        console.log("Router#login");
+        this.view = new Login();
+        $("#app").html(this.view.render().$el);
+    }
+
+    rooms () {
         console.log("Router#home");
-        var view = new Home();
         // this.socket.emit("leave");
         // this.view && (this.view.close ? this.view.close() : this.view.remove());
         this.view = new Home({chatroomCollection: this.chatrooms});

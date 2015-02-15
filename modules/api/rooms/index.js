@@ -25,7 +25,7 @@ urlRoot.get( function( req, res ) {
 
 urlRoot.post( function( req, res) {
     console.log("blabb");
-    room = new Room;
+    var room = new Room;
     room.name = req.body.name;
     if ( req.body.users ) {
         room.users = req.body.users

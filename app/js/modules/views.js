@@ -15,6 +15,8 @@ class HomeView extends View {
         };
         if (options && options.chatroomCollection) {
             this.chatroomCollection = options.chatroomCollection;
+
+            this.chatroomCollection.models = [{name: "asdf", users:["john", "franz"]},{name: "asdf", users:["john", "franz"]}]
         }
         // this.userCollection.on('all', this.render, this);
         // this.chatroomCollection.on('all', this.render, this);
@@ -46,6 +48,29 @@ class HomeView extends View {
     //         this.createUser(event);
     //     }
     // }
+}
+
+class LoginView extends View {
+    initialize (options) {
+        console.log("loginview init");
+        this.template = $( "script[name='login']" ).html();
+        this.events = {
+            "click button#login": "login"
+        }
+    }
+
+    render (options) {
+        this.$el.html( _.template(this.template)({
+
+        }));
+        return this;
+    }
+
+    login () {
+        var password = this.$el.find("#password").val();
+        var user = this.$el.find("#username").val();
+        console.log("login", user, password);
+    }
 }
 
 class ChatroomView extends View {
@@ -99,4 +124,4 @@ class ChatroomView extends View {
     // }
 }
 
-export {HomeView, ChatroomView};
+export {HomeView, ChatroomView, LoginView};

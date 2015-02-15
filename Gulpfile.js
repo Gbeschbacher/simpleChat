@@ -58,6 +58,8 @@
         "./bower_components/jquery/dist/jquery.js",
         "./bower_components/underscore/underscore.js",
         "./bower_components/backbone/backbone.js",
+        "./app/js/bootstrap/bootstrap.min.js",
+        "./app/js/bootstrap/scripts.js",
         "./build/main-bundle.js"
     ];
 
@@ -107,7 +109,7 @@
     })
 
 
-    gulp.task( "build:css", function() {
+    gulp.task( "build:css", ["copy:fonts"], function() {
         return gulp.src( "./app/css/app.scss" )
             .pipe( sass() )
             .pipe( prefixer({
@@ -115,8 +117,13 @@
                 cascade: false}) )
             .pipe( minifyCSS() )
             .pipe( gulp.dest("./build") )
-            .pipe( livereload() )
+            .pipe( livereload() );
     });
+
+    gulp.task( "copy:fonts", function() {
+        return gulp.src( "./app/css/fonts/**/*.*" )
+            .pipe( gulp.dest("./build/fonts") );
+    })
 
     gulp.task( "build", ["build:css", "build:js", "build:cleanTemp"]);
 
@@ -164,7 +171,10 @@
                 script: "./app.js",
                 watch:  [
                     "./modules"
-                ]
+                ],
+                env: {
+                    "NODE_ENV": "development"
+                }
             }).on( "restart", function() {
                 console.log( "app restarted" );
             });

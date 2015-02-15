@@ -1,5 +1,7 @@
 "use strict";
 
+var crypto = require( "crypto" );
+
 var mongoose = require( "mongoose" );
 
 var db = require( "../../connection.js" );
@@ -7,13 +9,21 @@ var db = require( "../../connection.js" );
 var userSchema = mongoose.Schema({
     name: {
         type: String,
-        index: true
+        index: true,
+        unique: true
     },
     salt: {
-        type: String //required: true
+        type: String,
+        required: true
     },
     hash: {
-        type: String //required: true
+        type: String,
+        required: true
+    },
+    online: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 
 })
@@ -46,7 +56,6 @@ userSchema.methods = {
         }
     }
 }
-
 module.exports = {
     schema: userSchema,
     model: db.model( "User", userSchema )

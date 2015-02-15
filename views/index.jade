@@ -1,60 +1,122 @@
 doctype html
-html
-
+html(lang="en")
   head
-    meta(charset='utf-8')
-    link(type='text/css', rel='stylesheet', href='/app.css')
+    meta(http-equiv="content-type", content="text/html; charset=UTF-8")
+    meta(charset="utf-8")
+    link(type="text/css", rel="stylesheet", href="/app.css")
     title simpleChat
-
+    meta(name="generator", content="Bootply")
+    meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
   body
-    //- single Page App
-    #app.container
+    #wrap
+      .container
+        nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
+          .navbar-header
+            a.navbar-brand(href="#") simpleChat
+        #app
+
+
+
+    footer.footer
+      .container
+        .row
+          .col-md-4
+            | Simple Chat Applikation using <a href="http://nodejs.org/">node.js</a>,
+            | <a href="https://www.mongodb.org/">mongoDB</a>,
+            | <a href="http://backbonejs.org/">Backbone.js</a>, <a href="http://bootstrapzero.com/bootstrap-template/holo">Holo Theme From Bootply</a>.
+          .col-md-4
+            | Available on <a href="https://github.com/PosMich/simpleChat">GitHub</a>.
+          .col-md-4
+            | Contributors:
+            ul.list-unstyled
+              li <a href="https://github.com/Gbeschbacher">Georg Eschbacher</a>
+              li <a href="https://github.com/PosMich">Michael Poschacher</a>
+
+
     script(src='/app.js')
 
-    script(type='text/template', name='home')
-      h1 simpleChat
-      .row
-        button#chatroom.btn.btn-primary.col-xs-4(type="submit") create chatroom
-        button#username.btn.btn-primary.col-xs-4(type="submit") create user
-        input.col-xs-4(type="text", name="userame")
+    script(type='text/template', name='login')
+        div#login.container-fluid
+            .row
+              .col-sm-6.col-sm-offset-3
+                .well
+                  form.form
+                    h4 Signup/Login
+                    input#username.form-control.input-lg(type="text", title="username", placeholder="Enter your Username")
+                    .input-group.text-center
+                      input#password.form-control.input-lg(type="password", title="password", placeholder="Enter your Password")
+                      span.input-group-btn
+                        button#login.btn.btn-lg.btn-primary(type="button") OK
+            .row
+              .col-sm-6.col-sm-offset-3
+                .alert.alert-danger.hidden(role="alert") User allready exists or wrong password entered!
 
-      .row
-        .col-xs-12
-          p available chatrooms
-        //- ul
-        //- <%= _.each(chatrooms, function(room){ %>
-        //-     li
-        //-       a(href="#<%=room.get('id')%>") chat <%=room.get('id')%>
-        //-   <%= }) %>
+      script(type='text/template', name='home')
+        div#rooms.container-fluid
+          .row
+              .col-sm-6.col-sm-offset-3
+                .panel.panel-default
+                  .panel-heading
+                    a.pull-right(href='!') leave Chat
+                    h4 Available Rooms
+                  .panel-body
+                    .list-group
+                      <% if (chatrooms.length === 0) { %>
+                      .text-center no room available
+                      <% } else {_.each(chatrooms, function(room) { %>
+                      .list-group-item <%= room.name %> <small>(<%=room.users.length%> active <% room.users.length > 1 ? "users" : "user"%>)</small>
+                        button.btn.btn-primary.btn-xs.pull-right(type="submit",data-room="<%=room.name%>") Join
+                      <% }) } %>
+                      //- <%= _.each(chatrooms, function(room){ %>
+                      //-.list-group-item <%=room.name%> <small>(<%=room.users.length%> active <%= room.users.length > 1 ? "users" : "user"%>)</small>
+                      //-  button.btn.btn-primary.btn-xs.pull-right(type="submit",data-room="<%=room.name%>") Join
+                      //-<%= }) %>
 
-    script(type='text/template', name='chatroom')
-      #chat
-          #roomspanel
-            h1 Chat <%=room.get('id')%>
-            ul#rooms
-              li#system.roomtab.active Central Room
-              li.roomtab Small Room
-              li.roomtab.create + create
-          #central
-            #userlist
-              ul
-                li Someone
-                li Another
-                li and more
-                li lurker
-            #messagespanel
-              #messages
-                #central_room
-                  .line.system
-                    span.timestamp 10:12
-                    span.message momo connected.
-                  .line
-                    span.timestamp 10:12
-                    span.user momo
-                    span.message  ... connected
-              #inputbox
-                form
-                  textarea#inputline
+                    form.form
+                      .input-group
+                        input#newRoom.form-control.input(type="text", title="new Room", placeholder="Enter a room name")
+                        span.input-group-btn
+                          button.btn.btn-md.btn-primary(type="button") add
+      script(type='text/template', name='chat')
+        div#chat.container-fluid
+          .row
+            .col-md-4
+              .panel.panel-default
+                .panel-heading
+                  h4 Users
+                .panel-body
+                  .list-group
+                    .list-group-item User 1
+                    .list-group-item User 2
+                    .list-group-item User 3
+              button.btn.btn-primary
+                span.glyphicon.glyphicon-arrow-left  Overview
 
+            .col-md-8.container-chat
+              .panel.panel-default
+                .panel-heading
+                  h4 Chat
+                .panel-body
+                  ul.chat
+                    li.left.clearfix
+                      .chat-body.clearfix
+                        .header
+                          strong.primary-font Jack Sparrow
+                          p
+                            | lkajfdslksajfd ölksad jfaölskd jfsa ölksad
+                            | lkasjfdlksajdf lkjdsa flksaj dflsa kdjfsa
+                            | lkasjfdoasjfd lksad jflksad jfsa kjfsald kfsa
+                            | alksdjf la slk sadf
+                    li.right.clearfix
+                      .chat-body.clearfix
+                        .header
+                          strong.primary-font Me
+                          p
+                            | alksjdfas kl slkdj flksa jfdlksa jdfldsa kj
+                            | aslkdjf lksadjf lkasjfd
 
-    script(src="https://cdn.socket.io/socket.io-1.0.0.js")
+                .panel-footer
+                  .input-group
+                    input#btn-input.form-control.input-sm(type="text",placeholder="Type your message here...")
+                    span.input-group-btn
+                      button#btn-chat.btn.btn-primary.btn-sm Send

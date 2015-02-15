@@ -3,6 +3,8 @@
 var passport = require( "passport" );
 
 var router = require( "express" ).Router();
+
+
 var BasicStrategy = require( "passport-http" ).BasicStrategy;
 
 passport.use( new BasicStrategy({}, function( name, password, done ){
@@ -41,19 +43,28 @@ urlRoot.get( function( req, res ) {
 });
 
 urlRoot.post( function( req, res ) {
-    user = new User;
+    var user = new User;
     user.name = req.body.name;
-    //user.password = req.body.password;
+    user.password = req.body.password;
 
     user.save( function( err ) {
         if ( err ) {
-            console.log( "error while creating User ", err );
-            res.send( err );
+            if ( err.code === 11000 || err.code === 84 ) {
+                res.send( {"error": "user allready exists"} );
+            } else {
+                console.log( "error while creating User ", err );
+                res.send( err );
+            }
+
         } else {
             res.status( 200 ).end();
         }
     });
 });
 
+// use this to test auth
+router.route( "/auth" ).get( basicAuth, function( req, res ) {
+    res.send( req.user );
+})
 
 module.exports = router;
