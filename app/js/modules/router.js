@@ -1,29 +1,17 @@
 "use strict";
 
-import { RoomsView as Rooms, ChatroomView as Chatroom, LoginView as Login } from './views';
-import { Users, Chatrooms } from './collections';
-
-// class Socket{
-//     constructor(){
-//         this.socket = io();
-//         return this.socket;
-//     }
-// }
+import { OverView as Overview, ChatroomView as Chatroom, LoginView as Login } from './views';
+import Chatrooms from './collections';
 
 class Router extends Backbone.Router {
 
     constructor () {
         this.routes = {
             "": "home",
-            "chatroom/:id": "chatroom"
+            "overview": "overview",
+            "room/:name": "room"
+
         };
-
-         this.socket = new Socket;
-
-        this.chatrooms = new Chatrooms;
-        this.users = new Users;
-        // this.chatrooms.fetch();
-
         super();
     }
 
@@ -33,30 +21,49 @@ class Router extends Backbone.Router {
         $("#app").html(this.view.render().$el);
     }
 
-    rooms () {
-        console.log("Router#home");
-        // this.socket.emit("leave");
-        // this.view && (this.view.close ? this.view.close() : this.view.remove());
-        this.view = new Home({chatroomCollection: this.chatrooms, userCollection: this.users});
-        $("#app").html(this.view.render().$el);
+
+    overview () {
+        window.messages = [];
+        var that = this;
+        if ( window.socket ) {
+            window.socket.emit("leave");
+        }
+        if (!window.loggedin) {
+            setTimeout( function() {
+                if (window.loggedin !== true) {
+                    return that.navigate("/", {trigger:true});
+                }
+                that.view = new Overview({collection:window.rooms});
+                $("#app").html(that.view.render().$el);
+
+
+            }, 300);
+        } else {
+            if (window.loggedin !== true) {
+                return this.navigate("/", {trigger:true});
+            }
+            this.view = new Overview({collection:window.rooms});
+            $("#app").html(this.view.render().$el);
+        }
     }
 
-    chatroom (_id) {
-        let chatroom = this.chatrooms.find({"id": _id})
-        console.log("Router#chatroom", chatroom);
-
-        if(chatroom == null){
-            return this.navigate("/", {trigger: true});
+    room (name) {
+        if (window.loggedin !== true) {
+            return this.navigate("/",{trigger:true});
+        }
+        var room = window.rooms.find({"name": name+""});
+        console.log("blubb", room);
+        if ( room ) {
+            console.log("Router#room");
+            window.socket.emit("join", {room: room.name});
+            this.view = new Chatroom({collection:window.rooms, name: name});
+            $("#app").html(this.view.render().$el);
+        } else {
+            this.navigate("/");
         }
 
-        // this.socket.removeListener("message");
-        // this.socket.emit("leave")
-        // this.view && (this.view.close ? this.view.close() : this.view.remove())
-        this.view = new Chatroom({model: chatroom, socket: this.socket})
-        // this.socket.emit("joinChatroom", _id)
-        $("#app").html(this.view.render().$el)
-
     }
+
 }
 
 export default Router;

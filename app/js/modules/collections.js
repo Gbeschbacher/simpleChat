@@ -1,23 +1,15 @@
 "use strict";
 
-import { User, Chatroom } from './models';
+import Chatroom from './models';
 
 const {Collection} = Backbone;
 
-class Users extends Collection {
-    constructor (args) {
-        this.model = User;
-        this.url ="/api/v0/user"
-        super(args)
-    }
-}
-
 class Chatrooms extends Collection {
     constructor (args) {
-        this.model = Chatroom;
-        this.url ="/api/v0/room"
         super(args)
+        this.model = Chatroom;
+        this.url = "/api/v0/room";
     }
 }
 
-export {Users, Chatrooms};
+export default Chatrooms;

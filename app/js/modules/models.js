@@ -2,25 +2,10 @@
 
 const {Model} = Backbone;
 
-class User extends Model{
-    constructor(args){
-        super(args)
-        Object.defineProperty(this, "name", {
-            get: function (){ return this.get("name")} ,
-            set: function (value) { this.set("name",value); }
-        });
-    }
-
-    defaults(){
-        return{
-            name: "unnamed"
-        };
-    }
-}
-
 class Chatroom extends Model{
-    constructor(args){
-        super(args)
+    constructor (args) {
+        super(args);
+        this.url = "/api/v0/room";
 
         Object.defineProperty(this, "name", {
             get: function (){ return this.get("name")} ,
@@ -34,11 +19,13 @@ class Chatroom extends Model{
     }
 
     defaults(){
-        return{
-            name: "unnamed"
+        return {
+            name: "unnamed",
+            users: []
         };
     }
+
 }
 
-export {User, Chatroom};
+export default Chatroom;
 

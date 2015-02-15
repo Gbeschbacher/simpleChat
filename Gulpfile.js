@@ -58,6 +58,7 @@
         "./bower_components/jquery/dist/jquery.js",
         "./bower_components/underscore/underscore.js",
         "./bower_components/backbone/backbone.js",
+        "./bower_components/socket.io-client/socket.io.js",
         "./app/js/bootstrap/bootstrap.min.js",
         "./app/js/bootstrap/scripts.js",
         "./build/main-bundle.js"

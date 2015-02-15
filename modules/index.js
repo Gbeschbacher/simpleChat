@@ -1,5 +1,4 @@
 "use strict";
-
 var http    = require( "http" );
 
 var express = require( "express" );
@@ -9,8 +8,11 @@ var passport = require( "passport" );
 
 var config  = require( "./config" );
 var api = require( "./api" );
+var socket = require( "./socket" );
 
 var app = express();
+
+var basicAuth = passport.authenticate( "basic", {session:false} );
 
 if ( process.env.NODE_ENV === "development" ) {
     app.use( require("connect-livereload")({port: 35729}) );
@@ -30,7 +32,7 @@ app.use( express.static("./build") );
 app.use( api );
 
 var server = http.createServer( app );
-
+socket( server );
 
 module.exports =  {
     server: server,

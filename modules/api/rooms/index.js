@@ -9,7 +9,7 @@ var urlRoot = router.route( "/" );
 
 urlRoot.get( function( req, res ) {
     console.log("blubb");
-    Room.find( {}, function( err, rooms ){
+    Room.find( {}).populate("users").exec( function( err, rooms ){
         if ( err ) {
             console.log( "wasn't able to get Rooms", err );
             res.send( err );

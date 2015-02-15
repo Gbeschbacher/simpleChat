@@ -4,10 +4,10 @@ var passport = require( "passport" );
 
 var router = require( "express" ).Router();
 
-
 var BasicStrategy = require( "passport-http" ).BasicStrategy;
 
 passport.use( new BasicStrategy({}, function( name, password, done ){
+    console.log("login try", name, password);
     User.findOne( {name: name}, function( err, user ){
         if ( err ) {
             return done( err );
@@ -57,7 +57,7 @@ urlRoot.post( function( req, res ) {
             }
 
         } else {
-            res.status( 200 ).end();
+            res.status( 200 ).send(user);
         }
     });
 });

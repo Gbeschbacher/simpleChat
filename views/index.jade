@@ -15,8 +15,6 @@ html(lang="en")
             a.navbar-brand(href="#") simpleChat
         #app
 
-
-
     footer.footer
       .container
         .row
@@ -36,20 +34,22 @@ html(lang="en")
     script(src='/app.js')
 
     script(type='text/template', name='login')
-        div#login.container-fluid
+        div.container-fluid
             .row
               .col-sm-6.col-sm-offset-3
                 .well
                   form.form
-                    h4 Signup/Login
+                    h4 Login / Signup
                     input#username.form-control.input-lg(type="text", title="username", placeholder="Enter your Username")
+                    input#password.form-control.input-lg(type="password", title="password", placeholder="Enter your Password")
                     .input-group.text-center
-                      input#password.form-control.input-lg(type="password", title="password", placeholder="Enter your Password")
                       span.input-group-btn
-                        button#login.btn.btn-lg.btn-primary(type="button") OK
+                        a#login.btn.btn-lg.btn-primary(type="button",href="#overview") Login
+                      span.input-group-btn
+                        a#signup.btn.btn-lg.btn-primary(type="button",href="#overview") Signup
             .row
               .col-sm-6.col-sm-offset-3
-                .alert.alert-danger.hidden(role="alert") User allready exists or wrong password entered!
+                .alert.alert-danger(role="alert") User allready exists or wrong password entered!
 
       script(type='text/template', name='home')
         div#rooms.container-fluid
@@ -57,7 +57,7 @@ html(lang="en")
               .col-sm-6.col-sm-offset-3
                 .panel.panel-default
                   .panel-heading
-                    a.pull-right(href='!') leave Chat
+                    a.pull-right(href='/') leave Chat
                     h4 Available Rooms
                   .panel-body
                     .list-group
@@ -65,18 +65,14 @@ html(lang="en")
                       .text-center no room available
                       <% } else {_.each(chatrooms, function(room) { %>
                       .list-group-item <%= room.name %> <small>(<%=room.users.length%> active <% room.users.length > 1 ? "users" : "user"%>)</small>
-                        button.btn.btn-primary.btn-xs.pull-right(type="submit",data-room="<%=room.name%>") Join
+                        <a id="join" class="btn btn-primary btn-xs pull-right" type="submit" href="#room/<%= room.name %>">Join</a>
                       <% }) } %>
-                      //- <%= _.each(chatrooms, function(room){ %>
-                      //-.list-group-item <%=room.name%> <small>(<%=room.users.length%> active <%= room.users.length > 1 ? "users" : "user"%>)</small>
-                      //-  button.btn.btn-primary.btn-xs.pull-right(type="submit",data-room="<%=room.name%>") Join
-                      //-<%= }) %>
 
                     form.form
                       .input-group
                         input#newRoom.form-control.input(type="text", title="new Room", placeholder="Enter a room name")
                         span.input-group-btn
-                          button.btn.btn-md.btn-primary(type="button") add
+                          button#addRoom.btn.btn-md.btn-primary(type="button") add
       script(type='text/template', name='chat')
         div#chat.container-fluid
           .row
@@ -86,38 +82,38 @@ html(lang="en")
                   h4 Users
                 .panel-body
                   .list-group
-                    .list-group-item User 1
-                    .list-group-item User 2
-                    .list-group-item User 3
-              button.btn.btn-primary
+                    <% _.each( rooms.models, function( room ) { if (room.name == name) { %>
+                    <% _.each( room.users, function( user ) { %>
+                    .list-group-item <%= user.name %>
+                    <%  }); %>
+                    <% }}); %>
+
+              a#back.btn.btn-primary(href="#overview")
                 span.glyphicon.glyphicon-arrow-left  Overview
 
             .col-md-8.container-chat
               .panel.panel-default
                 .panel-heading
-                  h4 Chat
+                  h4 Room: <%=name%>
                 .panel-body
                   ul.chat
+                    <% _.each( window.messages, function(msg){ %>
                     li.left.clearfix
                       .chat-body.clearfix
                         .header
-                          strong.primary-font Jack Sparrow
-                          p
-                            | lkajfdslksajfd ölksad jfaölskd jfsa ölksad
-                            | lkasjfdlksajdf lkjdsa flksaj dflsa kdjfsa
-                            | lkasjfdoasjfd lksad jflksad jfsa kjfsald kfsa
-                            | alksdjf la slk sadf
-                    li.right.clearfix
-                      .chat-body.clearfix
-                        .header
-                          strong.primary-font Me
-                          p
-                            | alksjdfas kl slkdj flksa jfdlksa jdfldsa kj
-                            | aslkdjf lksadjf lkasjfd
+                          strong.primary-font <%= msg.name %>
+                          p <%= msg.message %>
+                    <% }); %>
 
                 .panel-footer
                   .input-group
-                    input#btn-input.form-control.input-sm(type="text",placeholder="Type your message here...")
+                    input#msg.form-control.input-sm(type="text",placeholder="Type your message here...")
                     span.input-group-btn
-                      button#btn-chat.btn.btn-primary.btn-sm Send
+                      button#send.btn.btn-primary.btn-sm Send
 
+      script(type="text/template", name="message")
+        li.left.clearfix
+          .chat-body.clearfix
+            .header
+              strong.primary-font <%= name %>
+              p <%= message %>

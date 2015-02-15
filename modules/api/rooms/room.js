@@ -7,7 +7,8 @@ var db = require( "../../connection.js" );
 var roomSchema = mongoose.Schema({
     name: {
         type: String,
-        index: true
+        index: true,
+        unique: true
     },
     users: [{
         type: mongoose.Schema.Types.ObjectId,
