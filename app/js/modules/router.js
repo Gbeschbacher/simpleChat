@@ -3,12 +3,12 @@
 import { HomeView as Home, ChatroomView as Chatroom } from './views';
 import { Users, Chatrooms } from './collections';
 
-class Socket{
-    constructor(){
-        this.socket = io();
-        return this.socket;
-    }
-}
+// class Socket{
+//     constructor(){
+//         this.socket = io();
+//         return this.socket;
+//     }
+// }
 
 class Router extends Backbone.Router {
 
@@ -17,8 +17,8 @@ class Router extends Backbone.Router {
             "": "home",
             "chatroom/:id": "chatroom"
         };
-
-        this.socket = new Socket;
+        this.socket = undefined
+        // this.socket = new Socket;
 
         this.chatrooms = new Chatrooms;
         this.users = new Users;
@@ -34,7 +34,7 @@ class Router extends Backbone.Router {
 
         // this.socket.emit("leave");
         // this.view && (this.view.close ? this.view.close() : this.view.remove());
-        this.view = new Home({chatroomCollection: this.chatrooms, userCollection: this.users});
+        this.view = new Home({chatroomCollection: this.chatrooms});
         $("#app").html(this.view.render().$el);
     }
 
@@ -46,11 +46,11 @@ class Router extends Backbone.Router {
             this.navigate("/", {trigger: true});
         }
 
-        this.socket.removeListener("message");
-        this.socket.emit("leave")
-        this.view && (this.view.close ? this.view.close() : this.view.remove())
+        // this.socket.removeListener("message");
+        // this.socket.emit("leave")
+        // this.view && (this.view.close ? this.view.close() : this.view.remove())
         this.view = new Chatroom({model: chatroom, socket: this.socket})
-        this.socket.emit("joinChatroom", _id)
+        // this.socket.emit("joinChatroom", _id)
         $("#app").html(this.view.render().$el)
 
     }

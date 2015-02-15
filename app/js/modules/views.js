@@ -18,15 +18,11 @@ class HomeView extends View {
 
         // this.userCollection.on('all', this.render, this);
         // this.chatroomCollection.on('all', this.render, this);
-
-        console.log(this.userCollection.models)
-        console.log(this.userCollection.models.length)
     }
 
     render () {
         this.$el.html(_.template(this.template)({
-            chatrooms: this.chatroomCollection.models,
-            users : this.userCollection.models
+            chatrooms: this.chatroomCollection.models
         }));
         return this;
     }
