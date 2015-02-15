@@ -15,8 +15,8 @@ urlRoot.get( function( req, res ) {
             res.send( err );
         } else {
             console.log("ROOMS", rooms);
-            if ( rooms == null ) {
-                rooms = []
+            if ( rooms === null ) {
+                rooms = [];
             }
             res.send( rooms );
         }
@@ -25,10 +25,10 @@ urlRoot.get( function( req, res ) {
 
 urlRoot.post( function( req, res) {
     console.log("blabb");
-    var room = new Room;
+    var room = new Room();
     room.name = req.body.name;
     if ( req.body.users ) {
-        room.users = req.body.users
+        room.users = req.body.users;
     }
 
     room.save( function( err ) {
@@ -81,7 +81,7 @@ urlName.post( function( req, res ) {
                 }
             });
         }
-    })
+    });
 });
 
 urlName.delete( function( req, res ) {

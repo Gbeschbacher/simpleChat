@@ -1,11 +1,15 @@
 "use strict";
 
 var passport = require( "passport" );
+var BasicStrategy = require( "passport-http" ).BasicStrategy;
 
 var router = require( "express" ).Router();
 
-var BasicStrategy = require( "passport-http" ).BasicStrategy;
+var User = require( "./user" ).model;
 
+// Define basic strategy for passport auth.
+// Should never be used without https (it's generally not a good idea to rely
+// on basic auth), at least a digeset auth should be used.
 passport.use( new BasicStrategy({}, function( name, password, done ){
     console.log("login try", name, password);
     User.findOne( {name: name}, function( err, user ){
@@ -24,7 +28,6 @@ passport.use( new BasicStrategy({}, function( name, password, done ){
 
 var basicAuth = passport.authenticate( "basic", {session:false} );
 
-var User = require( "./user" ).model;
 
 var urlRoot = router.route( "/" );
 
@@ -34,8 +37,8 @@ urlRoot.get( function( req, res ) {
             console.log( "wasn't able to get Users", err );
             res.send( err );
         } else {
-            if ( users == null ) {
-                users = []
+            if ( users === null ) {
+                users = [];
             }
             res.send( users );
         }
@@ -43,7 +46,7 @@ urlRoot.get( function( req, res ) {
 });
 
 urlRoot.post( function( req, res ) {
-    var user = new User;
+    var user = new User();
     user.name = req.body.name;
     user.password = req.body.password;
 
@@ -62,9 +65,9 @@ urlRoot.post( function( req, res ) {
     });
 });
 
-// use this to test auth
+// use this route to test auth
 router.route( "/auth" ).get( basicAuth, function( req, res ) {
     res.send( req.user );
-})
+});
 
 module.exports = router;

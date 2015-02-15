@@ -30,9 +30,9 @@ var roomSchema = mongoose.Schema({
             required: true
         }
     }]
-})
+});
 
 module.exports = {
     schema: roomSchema,
     model: db.model( "Room", roomSchema )
-}
+};

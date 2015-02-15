@@ -3,7 +3,7 @@
 var mongoose = require( "mongoose" );
 var config = require( "./config.js" );
 
-var connection = undefined;
+var connection = null;
 
 var connect = function() {
     connection = mongoose.createConnection( config.mongo, {
@@ -12,14 +12,15 @@ var connect = function() {
                 keppAlive: 1
             }
         }
-    })
+    });
 };
 connect();
 
-connection.on( "error", function(error) {
-    console.log( "error while creating db connection" );
+connection.on( "error", function( error ) {
+    console.log( "error while creating db connection", error );
 });
 
+// automatically reconnect
 connection.on( "disconnected", function() {
     console.log( "disconnected from server, trying to reconnect" );
     connect();

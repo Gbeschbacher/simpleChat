@@ -25,9 +25,9 @@ var userSchema = mongoose.Schema({
         required: true,
         default: false
     }
+});
 
-})
-
+// create password as virtual, store salt+hash in db
 userSchema.virtual( "password" ).set( function( password ) {
     this._password = password;
     this.salt = this.makeSalt();
@@ -41,7 +41,7 @@ userSchema.methods = {
         return this.encryptPassword( plainText ) === this.hash;
     },
     makeSalt: function() {
-        return Math.round( new Date().valueOf() * Math.random() ) + ""
+        return Math.round( new Date().valueOf() * Math.random() ) + "";
     },
     encryptPassword: function( password ) {
         if (!password) {
@@ -52,11 +52,12 @@ userSchema.methods = {
                 .update( password )
                 .digest( "hex" );
         } catch ( err ) {
-            return ""
+            return "";
         }
     }
-}
+};
+
 module.exports = {
     schema: userSchema,
     model: db.model( "User", userSchema )
-}
+};

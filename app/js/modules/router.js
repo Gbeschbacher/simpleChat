@@ -1,65 +1,67 @@
 "use strict";
 
 import { OverView as Overview, ChatroomView as Chatroom, LoginView as Login } from './views';
-import Chatrooms from './collections';
+
+// Router
+// ======
 
 class Router extends Backbone.Router {
 
     constructor () {
+        // define routes
         this.routes = {
             "": "home",
             "overview": "overview",
             "room/:name": "room"
-
         };
         super();
     }
 
+    // home
+    // ----
+
+    // render login view
     home () {
-        console.log("Router#login");
         this.view = new Login();
-        $("#app").html(this.view.render().$el);
+        $( "#app" ).html( this.view.render().$el );
     }
 
-
+    // overview
+    // --------
     overview () {
         window.messages = [];
-        var that = this;
+
+        // make sure, that last room was left
         if ( window.socket ) {
-            window.socket.emit("leave");
+            window.socket.emit( "leave" );
         }
-        if (!window.loggedin) {
-            setTimeout( function() {
-                if (window.loggedin !== true) {
-                    return that.navigate("/", {trigger:true});
-                }
-                that.view = new Overview({collection:window.rooms});
-                $("#app").html(that.view.render().$el);
-
-
-            }, 300);
-        } else {
-            if (window.loggedin !== true) {
-                return this.navigate("/", {trigger:true});
-            }
-            this.view = new Overview({collection:window.rooms});
-            $("#app").html(this.view.render().$el);
+        // if not logged in, return to home
+        if ( window.loggedin !== true ) {
+            return this.navigate( "/", {trigger:true} );
         }
+        // render Overview
+        this.view = new Overview( {collection:window.rooms} );
+        $( "#app" ).html( this.view.render().$el );
     }
 
-    room (name) {
-        if (window.loggedin !== true) {
-            return this.navigate("/",{trigger:true});
+    // room
+    // ----
+    room ( name ) {
+        // if not logged in, return to home
+        if ( window.loggedin !== true ) {
+            return this.navigate( "/", {trigger:true} );
         }
-        var room = window.rooms.find({"name": name+""});
-        console.log("blubb", room);
+
+        // check if room exists
+        var room = window.rooms.find( {"name": name + ""} );
+
         if ( room ) {
-            console.log("Router#room");
-            window.socket.emit("join", {room: room.name});
-            this.view = new Chatroom({collection:window.rooms, name: name});
-            $("#app").html(this.view.render().$el);
+            // if so, emit join, render Chatroom
+            window.socket.emit( "join", {room: room.name} );
+            this.view = new Chatroom( {collection:window.rooms, name: name} );
+            $("#app").html( this.view.render().$el );
         } else {
-            this.navigate("/");
+            this.navigate( "/" );
         }
 
     }

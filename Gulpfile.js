@@ -22,17 +22,6 @@
     var source     = require( "vinyl-source-stream" );
     var traceur    = require( "gulp-traceur" );
     var rimraf     = require( "rimraf" );
-    /*
-
-    Tasks:
-        default     serve
-        serve       local server, browser open, auto refresh
-        build:js    traceur, uglify
-        build:css   scss (libsass), autoprefixer
-        build       js & css
-        test        jasmine, jshint <-- only clientside
-        doc         docco
-    */
 
     var _ref = [
         "",
@@ -65,15 +54,19 @@
     ];
 
     gulp.task( "doc", function() {
-        return gulp.src( ["./modules/**/*.js", "./app/js"] )
+        return gulp.src( [
+                "!./app/js/bootstrap/**/*.*",
+                "./app/js/**/*.js",
+                "./modules/**/*.js"
+            ])
             .pipe( docco() )
-            .pipe( gulp.dest( "./docs") )
+            .pipe( gulp.dest( "./docs/docs") )
 
     })
     gulp.task( "docs", ["doc"] );
 
     gulp.task( "lint", "Lints all CoffeeScript source files.", function() {
-        return gulp.src( ["./app/**/*.js", "!./modules/**/*.js"] )
+        return gulp.src( ["!./app/js/bootstrap/bootstrap.min.js", "./app/**/*.js", "./modules/**/*.js", ] )
             .pipe( jshint() )
             .pipe( jshint.reporter() );
     });
@@ -85,7 +78,7 @@
 
 
     /* 3rd step: concat and uglify */
-    gulp.task("build:js", ["browserify:main"], function() {
+    gulp.task("build:js", ["lint","browserify:main"], function() {
         return gulp.src( FILES )
             .pipe( concat("app.js") )
             .pipe( gulp.dest("./build/") )
