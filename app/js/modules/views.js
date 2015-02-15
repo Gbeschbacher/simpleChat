@@ -1,24 +1,12 @@
 "use strict";
 
-import { User, Chatroom } from './models';
-import { Users, Chatrooms } from './collections';
-
 const {View} = Backbone;
 const ENTER_KEY = 13;
-
-
-class Socket{
-    constructor(){
-        this.socket = io();
-        return this.socket;
-    }
-}
-
 
 class HomeView extends View {
 
     initialize () {
-        this.template = $('script[name="home"]');
+        this.template = $('script[name="home"]').html();
         console.log("homeview init")
 
         this.events = {
@@ -27,47 +15,41 @@ class HomeView extends View {
             'keyup input[name="username"]': 'keyPressEventHandler',
         };
 
-        this.Chatrooms = new Chatrooms;
-        this.Users = new Users;
 
-        console.log(JSON.stringify(new User()));
-        console.log(JSON.stringify(new User({name: "test"})));
+        // this.userCollection.on('all', this.render, this);
+        // this.chatroomCollection.on('all', this.render, this);
+
+        console.log(this.userCollection.models)
+        console.log(this.userCollection.models.length)
     }
 
     render () {
-        console.log(this.model);
-        this.$el.html(_.template(this.template(this.model.attributes)));
+        this.$el.html(_.template(this.template)({
+            chatrooms: this.chatroomCollection.models,
+            users : this.userCollection.models
+        }));
         return this;
     }
 
-    createUser (e) {
-        event.preventDefault();
+    // createUser (event) {
+    //     event.preventDefault();
 
-        var $userName = this.$el.find('input[name="username"]');
-        var user = new User({name: $userName.val()})
+    //     var $userName = this.$el.find('input[name="username"]');
+    //     this.userCollection.create({name: $userName.val()}, {wait: true});
+    // }
 
-        this.Users.add(user);
-        console.log(this.Users);
+    // createChatroom (event){
+    //     event.preventDefault();
 
-    }
+    //     var $chatroom = this.$el.find('input[name="chatroom"]');
+    //     this.chatroomCollection.create({name: $chatroom.val()}, {wait: true});
+    // }
 
-    createChatroom (e){
-        event.preventDefault();
-
-        var $chatroom = this.$el.find('input[name="chatroom"]');
-
-        var chatroom = new Chatroom({name: $chatroom.val()})
-
-        this.Chatrooms.add(chatroom);
-        console.log(this.Chatrooms);
-
-    }
-
-    keyPressEventHandler (event) {
-        if(event.keyCode === ENTER_KEY){
-            //this.setUserName(event);
-        }
-    }
+    // keyPressEventHandler (event) {
+    //     if(event.keyCode === ENTER_KEY){
+    //         this.createUser(event);
+    //     }
+    // }
 }
 
 class ChatroomView extends View {
@@ -75,33 +57,45 @@ class ChatroomView extends View {
     initialize () {
         this.template = $('script[name="chatroom"]').html();
         this.events = {
-            'click button[type="submit"]': 'sendMessage',
-            'keyup input[type="text"]': 'keyPressEventHandler'
+            'keyup #inputline': 'keyPressEventHandler'
         }
+
+        this.socket.on('message', function(user, msg){
+            console.log(user + ": " + msg);
+            this.getMessage(user, msg)
+        });
+
     }
 
     render () {
-        console.log($('script[name="chatroom"]').html());
-        this.$el.html(_.template(this.template));
+        this.$el.html(_.template(this.template)({
+            room: this.model
+        }));
         return this;
     }
 
+    // sendMessage (event) {
+    //     console.log("sendMessage in ChatroomView")
+    //     event.preventDefault();
 
-    sendMessage (event) {
-        console.log("sendMessage in ChatroomView")
-        event.preventDefault();
+    //     let $msg = this.$el.find('input[type="text"]');
+    //     this.socket.emit('message', $msg.val());
+    //     $msg.val('');
+    // }
 
-        let $message = this.$el.find('input[type="text"]');
-        let message = $message.val();
-        $message.val('');
-        console.log("message in ChatroomView: " + message)
-    }
+    // getMessage(user, msg){
 
-    keyPressEventHandler (event){
-        if(event.keyCode === ENTER_KEY){
-            this.sendMessage(event);
-        }
-    }
+    //     let h = new Date().getHours();
+    //     let m = new Date().getMinutes();
+
+    //     this.$el.find("#central_room").append($("<div class'line'><span class='timestamp'>"+ h +":"+ m +"</span><span class='user'>"+ user +"</span><span class='message'>"+ message +"</span>" ));
+    // }
+
+    // keyPressEventHandler (event){
+    //     if(event.keyCode === ENTER_KEY){
+    //         this.sendMessage(event);
+    //     }
+    // }
 }
 
 export {HomeView, ChatroomView};

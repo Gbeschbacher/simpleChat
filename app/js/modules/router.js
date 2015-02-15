@@ -1,29 +1,58 @@
 "use strict";
 
 import { HomeView as Home, ChatroomView as Chatroom } from './views';
+import { Users, Chatrooms } from './collections';
+
+class Socket{
+    constructor(){
+        this.socket = io();
+        return this.socket;
+    }
+}
 
 class Router extends Backbone.Router {
 
     constructor () {
         this.routes = {
             "": "home",
-            "chatroom": "chatroom",
-            "*actions": "home"
+            "chatroom/:id": "chatroom"
         };
+
+        this.socket = new Socket;
+
+        this.chatrooms = new Chatrooms;
+        this.users = new Users;
+        // this.chatrooms.fetch({data: {sort: '_id'}});
+
         super();
     }
 
     home () {
         console.log("Router#home");
+
         var view = new Home();
-        $("#app").html(view.render().$el)
-        this.testIs = true;
+
+        // this.socket.emit("leave");
+        // this.view && (this.view.close ? this.view.close() : this.view.remove());
+        this.view = new Home({chatroomCollection: this.chatrooms, userCollection: this.users});
+        $("#app").html(this.view.render().$el);
     }
 
-    chatroom () {
+    chatroom (_id) {
         console.log("Router#chatroom");
-        var view = new Chatroom();
-        $("#app").html(view.render().$el)
+        let chatroom = this.chatrooms.find({"id": _id})
+
+        if(!chatrom){
+            this.navigate("/", {trigger: true});
+        }
+
+        this.socket.removeListener("message");
+        this.socket.emit("leave")
+        this.view && (this.view.close ? this.view.close() : this.view.remove())
+        this.view = new Chatroom({model: chatroom, socket: this.socket})
+        this.socket.emit("joinChatroom", _id)
+        $("#app").html(this.view.render().$el)
+
     }
 }
 
