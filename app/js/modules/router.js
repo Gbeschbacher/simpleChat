@@ -17,7 +17,7 @@ class Router extends Backbone.Router {
             "": "home",
             "chatroom/:id": "chatroom"
         };
-        this.socket = undefined
+        this.socket = "i am a socket"
         // this.socket = new Socket;
 
         this.chatrooms = new Chatrooms;
@@ -29,9 +29,7 @@ class Router extends Backbone.Router {
 
     home () {
         console.log("Router#home");
-
         var view = new Home();
-
         // this.socket.emit("leave");
         // this.view && (this.view.close ? this.view.close() : this.view.remove());
         this.view = new Home({chatroomCollection: this.chatrooms});
@@ -39,11 +37,11 @@ class Router extends Backbone.Router {
     }
 
     chatroom (_id) {
-        console.log("Router#chatroom");
         let chatroom = this.chatrooms.find({"id": _id})
+        console.log("Router#chatroom", chatroom);
 
-        if(!chatrom){
-            this.navigate("/", {trigger: true});
+        if(chatroom == null){
+            return this.navigate("/", {trigger: true});
         }
 
         // this.socket.removeListener("message");

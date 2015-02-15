@@ -5,17 +5,17 @@ const ENTER_KEY = 13;
 
 class HomeView extends View {
 
-    initialize () {
+    initialize (options) {
         this.template = $('script[name="home"]').html();
-        console.log("homeview init")
-
+        console.log("homeview init", options)
         this.events = {
             'click button#username': 'createUser',
             'click button#chatroom': 'createChatroom',
             'keyup input[name="username"]': 'keyPressEventHandler',
         };
-
-
+        if (options && options.chatroomCollection) {
+            this.chatroomCollection = options.chatroomCollection;
+        }
         // this.userCollection.on('all', this.render, this);
         // this.chatroomCollection.on('all', this.render, this);
     }
@@ -50,16 +50,21 @@ class HomeView extends View {
 
 class ChatroomView extends View {
 
-    initialize () {
+    initialize (options) {
+        console.log("chatroom init");
         this.template = $('script[name="chatroom"]').html();
         this.events = {
             'keyup #inputline': 'keyPressEventHandler'
         }
+        this.socket = options.socket;
+        this.model = options.model;
 
+        /*
         this.socket.on('message', function(user, msg){
             console.log(user + ": " + msg);
             this.getMessage(user, msg)
         });
+        */
 
     }
 
