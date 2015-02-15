@@ -17,12 +17,12 @@ class Router extends Backbone.Router {
             "": "home",
             "chatroom/:id": "chatroom"
         };
-        this.socket = "i am a socket"
-        // this.socket = new Socket;
+
+         this.socket = new Socket;
 
         this.chatrooms = new Chatrooms;
         this.users = new Users;
-        // this.chatrooms.fetch({data: {sort: '_id'}});
+        // this.chatrooms.fetch();
 
         super();
     }
@@ -37,7 +37,7 @@ class Router extends Backbone.Router {
         console.log("Router#home");
         // this.socket.emit("leave");
         // this.view && (this.view.close ? this.view.close() : this.view.remove());
-        this.view = new Home({chatroomCollection: this.chatrooms});
+        this.view = new Home({chatroomCollection: this.chatrooms, userCollection: this.users});
         $("#app").html(this.view.render().$el);
     }
 

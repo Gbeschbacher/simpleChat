@@ -11,12 +11,11 @@ class HomeView extends View {
         this.events = {
             'click button#username': 'createUser',
             'click button#chatroom': 'createChatroom',
-            'keyup input[name="username"]': 'keyPressEventHandler',
+            'keyup input[type="text"]': 'keyPressEventHandler',
         };
-        if (options && options.chatroomCollection) {
+        if (options && options.chatroomCollection && options.userCollection) {
             this.chatroomCollection = options.chatroomCollection;
-
-            this.chatroomCollection.models = [{name: "asdf", users:["john", "franz"]},{name: "asdf", users:["john", "franz"]}]
+            this.userCollection = options.userCollection;
         }
         // this.userCollection.on('all', this.render, this);
         // this.chatroomCollection.on('all', this.render, this);
@@ -29,25 +28,37 @@ class HomeView extends View {
         return this;
     }
 
-    // createUser (event) {
-    //     event.preventDefault();
+    createUser (event) {
+        event.preventDefault();
 
-    //     var $userName = this.$el.find('input[name="username"]');
-    //     this.userCollection.create({name: $userName.val()}, {wait: true});
-    // }
+        var $userName = this.$el.find('input[name="username"]');
+        console.log(this.userCollection)
+        this.userCollection.create({name: $userName.val()});
+    }
 
-    // createChatroom (event){
-    //     event.preventDefault();
+    createChatroom (event){
+        event.preventDefault();
 
-    //     var $chatroom = this.$el.find('input[name="chatroom"]');
-    //     this.chatroomCollection.create({name: $chatroom.val()}, {wait: true});
-    // }
+        var $chatroom = this.$el.find('input[name="chatroom"]');
+        console.log(this.chatroomCollection)
+        this.chatroomCollection.create({name: $chatroom.val()});
+    }
 
-    // keyPressEventHandler (event) {
-    //     if(event.keyCode === ENTER_KEY){
-    //         this.createUser(event);
-    //     }
-    // }
+    keyPressEventHandler (event) {
+        if(event.keyCode === ENTER_KEY){
+
+            let inputName = $(event.currentTarget).attr("name");
+            console.log(inputName === "username")
+            console.log(inputName);
+            if(inputName === "username"){
+                this.createUser(event);
+            }else{
+                this.createChatroom(event);
+            }
+
+            //this.createUser(event);
+        }
+    }
 }
 
 class LoginView extends View {
