@@ -5,8 +5,8 @@ var rooms = require( "./rooms" );
 var users = require( "./users" );
 
 
-router.use( "/api/v0/users", users );
-router.use( "/api/v0/rooms", rooms );
+router.use( "/api/v0/user", users );
+router.use( "/api/v0/room", rooms );
 
 router.all( "*", function( req, res ) {
     console.log( "Route not found: ", req.url );
