@@ -1,17 +1,33 @@
 "use strict";
 
-mongoose = require( "mongoose" );
+var mongoose = require( "mongoose" );
 
-db = require( "../../connection.js" );
+var db = require( "../../connection.js" );
 
-roomSchema = mongoose.Schema({
+var roomSchema = mongoose.Schema({
     name: {
         type: String,
         index: true
     },
     users: [{
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    }],
+    messages: [{
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
+        created: {
+            type: Date,
+            default: new Date(),
+            required: true
+        },
+        content: {
+            type: String,
+            required: true
+        }
     }]
 })
 

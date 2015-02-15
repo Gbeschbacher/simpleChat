@@ -5,8 +5,8 @@ var config = require( "./config.js" );
 
 var connection = undefined;
 
-connect = function() {
-    connection = mongoose.createConnectoin( config.mongo, {
+var connect = function() {
+    connection = mongoose.createConnection( config.mongo, {
         server: {
             socketOptions: {
                 keppAlive: 1

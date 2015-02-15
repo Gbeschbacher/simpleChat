@@ -5,6 +5,7 @@ var http    = require( "http" );
 var express = require( "express" );
 var morgan  = require( "morgan" );
 var bodyParser = require( "body-parser" );
+var passport = require( "passport" );
 
 var config  = require( "./config" );
 var api = require( "./api" );
@@ -20,12 +21,12 @@ if ( process.env.NODE_ENV === "development" ) {
 app.set( "views", __dirname + "/../views/" );
 app.set( "view engine", "jade" );
 
-app.use( morgan() );
+app.use( passport.initialize() );
+app.use( morgan("combined") );
 app.use( bodyParser.urlencoded({extended: true}) );
 app.use( bodyParser.json() );
 
-app.use( express.static("build") );
-app.use( express.static("bower_components") );
+app.use( express.static("./build") );
 
 app.use( api );
 
