@@ -1,5 +1,5 @@
 (function(){
     "use strict";
 
-    require('./modules')();
+    require('./modules').start();
 })();

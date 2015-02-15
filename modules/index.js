@@ -30,11 +30,15 @@ app.use( express.static("./build") );
 
 app.use( api );
 
-module.exports = function () {
-    var server = http.createServer( app );
+var server = http.createServer( app );
 
-    server.listen( config.port, function() {
-        var address = server.address();
-        console.log( "Listening on " + address.address + ":" + address.port );
-    });
-};
+
+module.exports =  {
+    server: server,
+    start: function() {
+        server.listen( config.port, function() {
+            var address = server.address();
+            console.log( "Listening on " + address.address + ":" + address.port );
+        });
+    }
+}

@@ -43,7 +43,7 @@ urlRoot.get( function( req, res ) {
 urlRoot.post( function( req, res ) {
     user = new User;
     user.name = req.body.name;
-    user.password = req.body.password;
+    //user.password = req.body.password;
 
     user.save( function( err ) {
         if ( err ) {
